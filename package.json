@@ -1,0 +1,15 @@
+{
+  "name": "sauce-automation-demo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.61.1",
+    "@types/node": "^26.1.1",
+    "typescript": "^5.5.3"
+  },
+  "private": true
+}
