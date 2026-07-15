@@ -96,10 +96,10 @@ just drive `SearchPage` the same way `search.spec.ts` does.
 Only one scenario is implemented, mirroring `search.spec.ts`'s "searching a
 known product term returns that product" case:
 
-- `features/search.feature` — the scenario in Gherkin.
-- `features/step_definitions/search.steps.ts` — Given/When/Then steps that
+- `features/search.feature` : the scenario in Gherkin.
+- `features/step_definitions/search.steps.ts` : Given/When/Then steps that
   instantiate `SearchPage` and assert against it.
-- `features/support/world.ts` / `hooks.ts` — a custom Cucumber `World` plus
+- `features/support/world.ts` / `hooks.ts` : a custom Cucumber `World` plus
   `Before`/`After` hooks that launch a Playwright browser/context per
   scenario (Playwright Test does this automatically via
   `playwright.config.ts`; Cucumber has no equivalent, so it's done by hand
@@ -134,7 +134,7 @@ sample is meant to make.
 - **Page objects are constructed manually in each test** (`new
   HomePage(page)`, etc.) rather than injected via Playwright's own
   `test.extend()` fixtures. That's a reasonable trade-off at this suite's
-  size, but worth revisiting if the number of specs grows — along with the
+  size, but worth revisiting if the number of specs grows, along with the
   `baseURL` currently duplicated by hand between `playwright.config.ts` and
   `features/support/hooks.ts`, since Cucumber doesn't share Playwright
   Test's config.
@@ -144,18 +144,52 @@ sample is meant to make.
 This is a small, representative sample, not a claim of full site coverage.
 In a real project I'd extend this with:
 
-- **API-level setup/teardown** — seeding cart/account state via requests
+- **API-level setup/teardown** : seeding cart/account state via requests
   instead of the UI, so tests aren't coupled to slower/flakier UI flows for
   state they aren't actually exercising.
-- **Fixtures sourced from the Storefront API instead of hardcoded** — as the
+- **Fixtures sourced from the Storefront API instead of hardcoded** : as the
   product catalog grows, hand-typed test values (names, prices, handles)
   silently drift out of sync with the live store. Generating fixtures from
-  Shopify's Storefront API at test-setup time — keyed by the product
+  Shopify's Storefront API at test-setup time, keyed by the product
   *archetype* a test needs (e.g. "a product with variants", "an
-  out-of-stock product") rather than by literal product identity — scales
+  out-of-stock product") rather than by literal product identity, scales
   to a large catalog without every new product requiring test changes.
 - **Accessibility checks** (`@axe-core/playwright`) on the key pages above.
 
 (Both of the above assume API credentials against the store, which this
-public demo storefront doesn't provide — noted here as the direction a real
+public demo storefront doesn't provide, noted here as the direction a real
 project would take, not something wired up in this sample.)
+
+## Further ahead: a QA database for fixture data at scale
+
+Storefront-API-sourced fixtures solve drift for a catalog this size. Teams
+running automation at real scale (dozens of suites, hundreds of products,
+multiple environments) often go a step further and keep a dedicated QA
+database instead, worth planning for even though it's out of scope here.
+
+- **What it would hold**: a synced snapshot of catalog data (products,
+  variants, prices, stock status), keyed by the same *archetype* concept
+  above (`simple`, `withVariants`, `outOfStock`, ...) rather than literal
+  product identity, with room to grow into cart/account seed state or
+  historical test-run results later, if the framework ever needed that.
+- **How it stays fresh**: a scheduled sync job (a CI cron, or a pre-suite
+  step) hits the Storefront API and upserts the DB, rather than a human
+  maintaining rows by hand. The DB becomes a fast, queryable cache of the
+  platform's own data, not a second hand-typed source of truth.
+- **Why a DB over a synced JSON fixture file**: relational queries. "An
+  in-stock product with 2+ variants under $50" is a `WHERE` clause against
+  a synced table; against flat JSON it's a hand-written filter that gets
+  messier as the catalog grows into the hundreds.
+- **Stack**: Postgres, queried from the TypeScript test code via a
+  lightweight, type-safe SQL library, [Drizzle ORM](https://orm.drizzle.team/)
+  or [Kysely](https://kysely.dev/) over a heavier ORM like Prisma, since
+  fixture data is a simple, mostly-read schema where fast process startup
+  (no separate query-engine binary) and control over the generated SQL
+  matter more than migration tooling or DX conveniences. Tests would depend
+  on a small `fixtures/db.ts` data-access module (e.g.
+  `getProduct('withVariants')`) rather than talking to Postgres directly,
+  so specs stay decoupled from the storage choice.
+- **Not free**: this is real infrastructure, a DB instance, migrations, a
+  sync job, and credentials to manage in every environment tests run in
+  (local, CI). Worth adopting once the catalog and number of suites are
+  large enough that flat fixture files become the bottleneck, not before.
