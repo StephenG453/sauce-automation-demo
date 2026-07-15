@@ -12,6 +12,7 @@ test.describe('Homepage', () => {
   // re: sourcing fixtures from the Storefront API instead, to avoid drift
   // as the catalog changes/grows.
   test('loads successfully with header nav and product grid', async ({ page }) => {
+    // Manually constructed — could be injected via a Playwright test.extend() fixture instead.
     const homePage = new HomePage(page);
     await homePage.goto();
 
@@ -28,6 +29,7 @@ test.describe('Homepage', () => {
   });
 
   test('cart starts empty for a first-time visitor', async ({ page }) => {
+    // Manually constructed — could be injected via a Playwright test.extend() fixture instead.
     const homePage = new HomePage(page);
     await homePage.goto();
 
@@ -38,6 +40,7 @@ test.describe('Homepage', () => {
   // scope" re: sourcing fixtures from the Storefront API instead, to avoid
   // drift as the catalog changes/grows.
   test('clicking a product card navigates to that product detail page', async ({ page }) => {
+    // Manually constructed — could be injected via a Playwright test.extend() fixture instead.
     const homePage = new HomePage(page);
     await homePage.goto();
 

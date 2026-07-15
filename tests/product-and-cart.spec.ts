@@ -17,6 +17,7 @@ test.describe('Product detail and cart management', () => {
   // on scope" re: sourcing fixtures from the Storefront API instead, to
   // avoid drift as the catalog changes/grows.
   test('product detail page shows the correct name and price', async ({ page }) => {
+    // Manually constructed — could be injected via a Playwright test.extend() fixture instead.
     const productPage = new ProductPage(page);
 
     await productPage.gotoProduct('grey-jacket');
@@ -30,6 +31,7 @@ test.describe('Product detail and cart management', () => {
   // scope" re: sourcing fixtures from the Storefront API instead, to avoid
   // drift as the catalog changes/grows.
   test('adding a product to the cart increments the header cart count', async ({ page }) => {
+    // Manually constructed — could be injected via a Playwright test.extend() fixture instead.
     const productPage = new ProductPage(page);
     await productPage.gotoProduct('grey-jacket');
 
@@ -49,6 +51,7 @@ test.describe('Product detail and cart management', () => {
   // scope" re: sourcing fixtures from the Storefront API instead, to avoid
   // drift as the catalog changes/grows.
   test('an added item appears in the cart and can be removed', async ({ page }) => {
+        // Manually constructed — could be injected via a Playwright test.extend() fixture instead.
         const productPage = new ProductPage(page);
         await productPage.gotoProduct('noir-jacket');
 

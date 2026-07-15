@@ -131,6 +131,13 @@ sample is meant to make.
   inline comment explaining why. This mirrors a real decision a QA
   engineer has to make about test data hygiene against a shared/live
   environment, rather than silently omitting the scenario.
+- **Page objects are constructed manually in each test** (`new
+  HomePage(page)`, etc.) rather than injected via Playwright's own
+  `test.extend()` fixtures. That's a reasonable trade-off at this suite's
+  size, but worth revisiting if the number of specs grows — along with the
+  `baseURL` currently duplicated by hand between `playwright.config.ts` and
+  `features/support/hooks.ts`, since Cucumber doesn't share Playwright
+  Test's config.
 
 ## Note on scope
 

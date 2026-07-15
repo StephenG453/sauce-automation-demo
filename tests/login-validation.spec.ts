@@ -8,6 +8,7 @@ import { LoginPage } from '../pages/LoginPage';
  */
 test.describe('Login', () => {
   test.skip('logging in with an unregistered email shows a validation error', async ({ page }) => {
+    // Manually constructed — could be injected via a Playwright test.extend() fixture instead.
     const loginPage = new LoginPage(page);
     await loginPage.goto();
 
@@ -24,6 +25,7 @@ test.describe('Login', () => {
 
   test('login page is reachable from the header on every page', async ({ page }) => {
     await page.goto('/');
+    // Manually constructed — could be injected via a Playwright test.extend() fixture instead.
     const loginPage = new LoginPage(page);
 
     await loginPage.loginLink.click();

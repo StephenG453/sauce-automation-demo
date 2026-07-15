@@ -11,6 +11,7 @@ import { uniqueEmail, randomPassword } from '../utils/testData';
  */
 test.describe('Account registration', () => {
   test('Sign up link in header navigates to the registration form', async ({ page }) => {
+    // Manually constructed — could be injected via a Playwright test.extend() fixture instead.
     const basePage = new BasePage(page);
     await basePage.goto('/');
 
@@ -37,6 +38,7 @@ test.describe('Account registration', () => {
   });
 
   test.skip('submitting the registration form without a password is rejected', async ({ page }) => {
+    // Manually constructed — could be injected via a Playwright test.extend() fixture instead.
     const registerPage = new RegisterPage(page);
     await registerPage.goto();
 
@@ -54,6 +56,7 @@ test.describe('Account registration', () => {
   // Enable deliberately (e.g. in a disposable test environment) if you
   // want to see a full happy-path registration
   test.skip('a visitor can successfully register a new account', async ({ page }) => {
+    // Manually constructed — could be injected via a Playwright test.extend() fixture instead.
     const registerPage = new RegisterPage(page);
     await registerPage.goto();
 

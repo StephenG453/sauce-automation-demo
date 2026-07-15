@@ -13,6 +13,7 @@ test.describe('Search', () => {
   // README "Note on scope" re: sourcing fixtures from the Storefront API
   // instead, to avoid drift as the catalog changes/grows.
   test('searching a known product term returns that product', async ({ page }) => {
+    // Manually constructed — could be injected via a Playwright test.extend() fixture instead.
     const searchPage = new SearchPage(page);
     await searchPage.goto();
 
@@ -28,6 +29,7 @@ test.describe('Search', () => {
   // name) — see README "Note on scope" re: sourcing fixtures from the
   // Storefront API instead, to avoid drift as the catalog changes/grows.
   test('searching a nonsense term does not error and shows no matching products', async ({ page }) => {
+    // Manually constructed — could be injected via a Playwright test.extend() fixture instead.
     const searchPage = new SearchPage(page);
     await searchPage.goto();
 
