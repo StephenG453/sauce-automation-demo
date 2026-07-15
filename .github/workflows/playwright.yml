@@ -12,7 +12,7 @@ jobs:
   test:
     name: Run Playwright suite
     timeout-minutes: 30
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
