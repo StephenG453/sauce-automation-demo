@@ -26,12 +26,20 @@ playwright-sauce-demo/
 │   └── RegisterPage.ts
 ├── utils/
 │   └── testData.ts           # Disposable email/password generators (no real PII)
-└── tests/
-    ├── home.spec.ts
-    ├── search.spec.ts
-    ├── product-and-cart.spec.ts
-    ├── account-registration.spec.ts
-    └── login-validation.spec.ts
+├── tests/
+│   ├── home.spec.ts
+│   ├── search.spec.ts
+│   ├── product-and-cart.spec.ts
+│   ├── account-registration.spec.ts
+│   └── login-validation.spec.ts
+├── cucumber.js                # Cucumber config (see "BDD / Cucumber example" below)
+└── features/                  # Gherkin/BDD example, reusing the same page objects
+    ├── search.feature
+    ├── step_definitions/
+    │   └── search.steps.ts
+    └── support/
+        ├── world.ts
+        └── hooks.ts
 ```
 
 Each page object encapsulates the locators and interactions for one page/
@@ -75,6 +83,38 @@ down, e.g. `npx playwright test --project=chromium`.
 | | *(skipped)* Full registration | Happy-path account creation, left as `test.skip` since it would create a real record on the live demo store; included to show the flow would be covered, and easy to enable in an isolated environment. |
 | `login-validation.spec.ts` | Invalid credentials | Logging in with a non-existent account shows a visible error and keeps the user on `/account/login`.                                                                                                    |
 | | Login reachability | The header "Log In" link is reachable from the homepage and lands on a form with visible email/password fields.                                                                                         |
+
+## BDD / Cucumber example
+
+The suite above is plain Playwright Test, which is what this project uses day
+to day. As a small example of how the same framework could support
+Gherkin/BDD-style specs, `features/` wires up
+[`@cucumber/cucumber`](https://github.com/cucumber/cucumber-js) on top of the
+*same* page objects in `pages/` — nothing is duplicated, the step definitions
+just drive `SearchPage` the same way `search.spec.ts` does.
+
+Only one scenario is implemented, mirroring `search.spec.ts`'s "searching a
+known product term returns that product" case:
+
+- `features/search.feature` — the scenario in Gherkin.
+- `features/step_definitions/search.steps.ts` — Given/When/Then steps that
+  instantiate `SearchPage` and assert against it.
+- `features/support/world.ts` / `hooks.ts` — a custom Cucumber `World` plus
+  `Before`/`After` hooks that launch a Playwright browser/context per
+  scenario (Playwright Test does this automatically via
+  `playwright.config.ts`; Cucumber has no equivalent, so it's done by hand
+  here).
+
+Run it with:
+
+```bash
+npm run test:bdd
+```
+
+This is intentionally a single example, not a parallel test suite. Adopting
+BDD project-wide would mean porting every `tests/*.spec.ts` scenario into
+`.feature` files and step definitions, which is a larger decision than this
+sample is meant to make.
 
 ## Design notes / trade-offs
 
