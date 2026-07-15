@@ -9,6 +9,9 @@ import * as sea from "node:sea";
  * regressions here directly affect discoverability/conversion.
  */
 test.describe('Search', () => {
+  // Hand-typed catalog data (assumes a "jacket" product exists) — see
+  // README "Note on scope" re: sourcing fixtures from the Storefront API
+  // instead, to avoid drift as the catalog changes/grows.
   test('searching a known product term returns that product', async ({ page }) => {
     const searchPage = new SearchPage(page);
     await searchPage.goto();
@@ -21,6 +24,9 @@ test.describe('Search', () => {
     await searchPage.expectResultContaining('jacket');
   });
 
+  // Hand-typed catalog data ("grey jacket" assumed to be a real product
+  // name) — see README "Note on scope" re: sourcing fixtures from the
+  // Storefront API instead, to avoid drift as the catalog changes/grows.
   test('searching a nonsense term does not error and shows no matching products', async ({ page }) => {
     const searchPage = new SearchPage(page);
     await searchPage.goto();

@@ -8,6 +8,9 @@ import { HomePage } from '../pages/HomePage';
  * should catch a broken deploy before any deeper flow is tested.
  */
 test.describe('Homepage', () => {
+  // Hand-typed catalog data (product names) — see README "Note on scope"
+  // re: sourcing fixtures from the Storefront API instead, to avoid drift
+  // as the catalog changes/grows.
   test('loads successfully with header nav and product grid', async ({ page }) => {
     const homePage = new HomePage(page);
     await homePage.goto();
@@ -31,6 +34,9 @@ test.describe('Homepage', () => {
     expect(await homePage.getCartCount()).toBe(0);
   });
 
+  // Hand-typed catalog data (product name/handle) — see README "Note on
+  // scope" re: sourcing fixtures from the Storefront API instead, to avoid
+  // drift as the catalog changes/grows.
   test('clicking a product card navigates to that product detail page', async ({ page }) => {
     const homePage = new HomePage(page);
     await homePage.goto();

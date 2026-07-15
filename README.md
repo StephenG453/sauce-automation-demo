@@ -135,6 +135,20 @@ sample is meant to make.
 ## Note on scope
 
 This is a small, representative sample, not a claim of full site coverage.
-In a real project I'd extend this with: API-level setup/teardown (seeding
-cart/account state via requests instead of the UI) and
-accessibility checks (`@axe-core/playwright`) on the key pages above.
+In a real project I'd extend this with:
+
+- **API-level setup/teardown** — seeding cart/account state via requests
+  instead of the UI, so tests aren't coupled to slower/flakier UI flows for
+  state they aren't actually exercising.
+- **Fixtures sourced from the Storefront API instead of hardcoded** — as the
+  product catalog grows, hand-typed test values (names, prices, handles)
+  silently drift out of sync with the live store. Generating fixtures from
+  Shopify's Storefront API at test-setup time — keyed by the product
+  *archetype* a test needs (e.g. "a product with variants", "an
+  out-of-stock product") rather than by literal product identity — scales
+  to a large catalog without every new product requiring test changes.
+- **Accessibility checks** (`@axe-core/playwright`) on the key pages above.
+
+(Both of the above assume API credentials against the store, which this
+public demo storefront doesn't provide — noted here as the direction a real
+project would take, not something wired up in this sample.)

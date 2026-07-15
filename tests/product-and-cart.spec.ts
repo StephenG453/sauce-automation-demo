@@ -13,6 +13,9 @@ import { CartPage } from '../pages/CartPage';
  * covered end-to-end rather than only at the unit/page level.
  */
 test.describe('Product detail and cart management', () => {
+  // Hand-typed catalog data (product handle/name/price) — see README "Note
+  // on scope" re: sourcing fixtures from the Storefront API instead, to
+  // avoid drift as the catalog changes/grows.
   test('product detail page shows the correct name and price', async ({ page }) => {
     const productPage = new ProductPage(page);
 
@@ -23,6 +26,9 @@ test.describe('Product detail and cart management', () => {
     await expect(productPage.addToCartButton).toBeVisible();
   });
 
+  // Hand-typed catalog data (product handle/name) — see README "Note on
+  // scope" re: sourcing fixtures from the Storefront API instead, to avoid
+  // drift as the catalog changes/grows.
   test('adding a product to the cart increments the header cart count', async ({ page }) => {
     const productPage = new ProductPage(page);
     await productPage.gotoProduct('grey-jacket');
@@ -39,6 +45,9 @@ test.describe('Product detail and cart management', () => {
       .toBeGreaterThan(before);
   });
 
+  // Hand-typed catalog data (product handle/name) — see README "Note on
+  // scope" re: sourcing fixtures from the Storefront API instead, to avoid
+  // drift as the catalog changes/grows.
   test('an added item appears in the cart and can be removed', async ({ page }) => {
         const productPage = new ProductPage(page);
         await productPage.gotoProduct('noir-jacket');
