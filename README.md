@@ -54,8 +54,7 @@ npx playwright test --ui         # interactive UI mode
 npx playwright show-report       # open the last HTML report
 ```
 
-Tests run against Chromium, Firefox, WebKit, and a mobile viewport
-(Pixel 7 emulation) by default. See `playwright.config.ts` to narrow that
+Tests run against Chromium and Firefox by default. See `playwright.config.ts` to narrow that
 down, e.g. `npx playwright test --project=chromium`.
 
 ## What each spec validates
@@ -97,6 +96,5 @@ down, e.g. `npx playwright test --project=chromium`.
 
 This is a small, representative sample, not a claim of full site coverage.
 In a real project I'd extend this with: API-level setup/teardown (seeding
-cart/account state via requests instead of the UI), CI integration
-(GitHub Actions matrix across the existing browser projects), and
+cart/account state via requests instead of the UI) and
 accessibility checks (`@axe-core/playwright`) on the key pages above.
