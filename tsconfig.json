@@ -11,5 +11,5 @@
     "resolveJsonModule": true,
     "outDir": "dist"
   },
-  "include": ["tests/**/*.ts", "pages/**/*.ts", "utils/**/*.ts", "playwright.config.ts"]
+  "include": ["tests/**/*.ts", "pages/**/*.ts", "utils/**/*.ts", "features/**/*.ts", "playwright.config.ts"]
 }
