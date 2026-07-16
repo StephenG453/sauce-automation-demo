@@ -27,11 +27,19 @@ export class BasePage {
     await this.page.goto(path);
   }
 
-  /** Reads the item count shown in the "My Cart (N)" header link. */
+  /**
+   * Reads the item count shown in the "My Cart (N)" header link. Throws
+   * with the actual text found instead of silently falling back to 0, so a
+   * broken/renamed cart-count element fails loudly with its real cause
+   * rather than surfacing later as a confusing "count didn't change".
+   */
   async getCartCount(): Promise<number> {
     const text = await this.cartCount.textContent();
     const match = text?.match(/\((\d+)\)/);
-    return match ? parseInt(match[1], 10) : 0;
+    if (!match) {
+      throw new Error(`getCartCount: expected cart count text to match "My Cart (N)", got "${text}"`);
+    }
+    return parseInt(match[1], 10);
   }
 
   async openCart() {

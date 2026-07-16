@@ -90,7 +90,7 @@ The suite above is plain Playwright Test, which is what this project uses day
 to day. As a small example of how the same framework could support
 Gherkin/BDD-style specs, `features/` wires up
 [`@cucumber/cucumber`](https://github.com/cucumber/cucumber-js) on top of the
-*same* page objects in `pages/` — nothing is duplicated, the step definitions
+*same* page objects in `pages/`, nothing is duplicated, the step definitions
 just drive `SearchPage` the same way `search.spec.ts` does.
 
 Only one scenario is implemented, mirroring `search.spec.ts`'s "searching a
@@ -138,6 +138,29 @@ sample is meant to make.
   `baseURL` currently duplicated by hand between `playwright.config.ts` and
   `features/support/hooks.ts`, since Cucumber doesn't share Playwright
   Test's config.
+
+## Error handling & debuggability
+
+As this suite scales, the most useful debugging signal isn't a bigger
+logging library layered on top of Playwright. `trace: 'retain-on-failure'`
+(see `playwright.config.ts`) already captures the full timeline, network
+log, console output, and DOM snapshots for every failure. The gap worth
+closing is narrower: making sure a failure reports its *real* cause instead
+of a misleading one.
+
+- **Don't let a parse/lookup fallback hide a broken locator.**
+  `BasePage.getCartCount()` used to silently return `0` if the cart-count
+  text didn't match the expected pattern, indistinguishable from a
+  legitimately empty cart. It now throws with the actual text it found, so
+  a theme change or broken selector fails loudly with its real cause
+  instead of surfacing three specs later as a confusing "count didn't
+  increase" assertion.
+- **Prefer Playwright's own `test.step()`** over introducing an external
+  logging library, to give failures a "which action was mid-flight"
+  narrative. It's already part of the dependency tree and shows up as
+  labeled groups in the HTML report/trace, not adopted throughout this
+  sample yet, but the natural next step if page-object actions grow complex
+  enough to need it.
 
 ## Note on scope
 
